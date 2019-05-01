@@ -1,0 +1,9 @@
+bin/
+rca/
+crypto-config/
+config/*.block
+config/*.tx 
+config/*.json
+config/*.yaml
+.DS_Store
+chaincode/hyperledger/

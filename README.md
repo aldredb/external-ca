@@ -1,10 +1,14 @@
-# Using OpenSSL CA as Root CA in Hyperledger Fabric (WIP)
+# Using OpenSSL CA as Root CA in Hyperledger Fabric
 
 Execute all commands in the folder root
 
 ## Prerequisites
 
+### Docker + Docker-Compose
+
 Ensure that `docker` and `docker-compose` are installed.
+
+### HF Binaries
 
 Download binaries for Hyperledger Fabric v1.4.1
 
@@ -61,7 +65,7 @@ Bring up **Intermediate CA**
 docker-compose up -d ica.org1.example.com
 ```
 
-Register and enroll users and peers for **Org1**
+Register and enroll users and peers for **Org1**, Wait at least 30 seconds before issuing the rest of the commands below. This is a safety measure to ensure that `NotBefore` property of the issued certificates are not earlier the `NotBefore` property of the Intermediate CA Certificate
 
 ```bash
 export FABRIC_CA_CLIENT_HOME=$REGISTRAR_DIR
@@ -95,7 +99,7 @@ configtxgen -profile OrdererGenesis -outputBlock ./config/genesis.block -channel
 configtxgen -profile Channel -outputCreateChannelTx ./config/channel1.tx -channelID channel1
 ```
 
-Bring up **Orderer**, **Peer** and **CLI** <-- error here
+Bring up **Orderer**, **Peer** and **CLI**
 
 ```bash
 docker-compose up -d orderer.example.com peer0.org1.example.com cli
@@ -121,8 +125,4 @@ docker exec cli peer chaincode query -C channel1 -n chaincode1 -c '{"Args":["que
 
 ```bash
 docker exec cli configtxlator proto_decode --input /config/genesis.block --type common.Block --output /config/genesis.json
-
-openssl req -config openssl_root.cnf -new -x509 -sha256 -extensions v3_ca -key rca/private/rca.org1.example.com.key.pem -out rca/certs/rca.org1.example.com.crt.pem -days 3650 -set_serial 0 -subj "/C=SG/ST=Singapore/L=Singapore/O=org1.example.com/OU=/CN=rca.org1.example.com"
-
-openssl pkcs8 -topk8 -nocrypt -in rca/private/rca.org1.example.com.key.pem -out rca/private/rca.org1.example.com.key.p8.pem
 ```

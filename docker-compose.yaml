@@ -32,33 +32,16 @@ services:
   ica.org1.example.com:
     image: hyperledger/fabric-ca:1.4.1
     environment:
-      - FABRIC_CA_SERVER_CA_NAME=ica.org1.example.com
-      - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ica.org1.example.com.crt.pem
-      - FABRIC_CA_SERVER_CA_CHAINFILE=/etc/hyperledger/fabric-ca-server-config/chain.org1.example.com.crt.pem
-      - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/ica.org1.example.com.key.pem
+      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
     ports:
       - "7054:7054"
     command: sh -c 'fabric-ca-server start -b admin:adminpw -d' 
     volumes:
       - ./crypto-config/peerOrganizations/org1.example.com/ca/:/etc/hyperledger/fabric-ca-server-config
+      - ./ca-config/:/etc/hyperledger/fabric-ca-server
     container_name: ica.org1.example.com
     networks:
       - basic
-
-  # rca.org1.example.com:
-  #   image: hyperledger/fabric-ca:1.4.1
-  #   environment:
-  #     - FABRIC_CA_SERVER_CA_NAME=rca.org1.example.com
-  #     - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server-config/rca.org1.example.com.crt.pem
-  #     - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/rca.org1.example.com.key.pem
-  #   ports:
-  #     - "7054:7054"
-  #   command: sh -c 'fabric-ca-server start -b admin:adminpw -d' 
-  #   volumes:
-  #     - ./crypto-config/peerOrganizations/org1.example.com/ca/:/etc/hyperledger/fabric-ca-server-config
-  #   container_name: rca.org1.example.com
-  #   networks:
-  #     - basic
 
   peer0.org1.example.com:
     container_name: peer0.org1.example.com

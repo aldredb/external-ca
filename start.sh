@@ -30,13 +30,13 @@ cat $ORG_DIR/ca/ica.org1.example.com.crt.pem $PWD/rca/certs/rca.org1.example.com
 echo "Starting Intermediate CA.."
 docker-compose up -d ica.org1.example.com
 echo "Sleeping for 30 seconds before creating peer and user certs.."
-sleep 31
+sleep 35
 
 echo "Registering and Enrolling Peer and User.."
 export FABRIC_CA_CLIENT_HOME=$REGISTRAR_DIR
 fabric-ca-client enroll --csr.names C=SG,ST=Singapore,L=Singapore,O=org1.example.com -m admin -u http://admin:adminpw@localhost:7054
 
-sleep 2
+sleep 5
 fabric-ca-client register --id.name Admin@org1.example.com --id.secret mysecret --id.type client --id.affiliation org1 -u http://localhost:7054
 fabric-ca-client register --id.name peer0.org1.example.com --id.secret mysecret --id.type peer --id.affiliation org1 -u http://localhost:7054
 
@@ -72,7 +72,7 @@ echo "Installing Chaincode.."
 docker exec cli peer chaincode install -n chaincode1 -p github.com/chaincode1 -v 1
 
 echo "Instantiating Chaincode.."
-docker exec cli peer chaincode instantiate -o orderer.example.com:7050 -C channel1 -n chaincode1 -l "golang" -v 1 -c "{\"Args\":[\"init\",\"a\",\"81\",\"b\",\"11\"]}" -P "OR('Org1MSP.member','Org2MSP.member')"
+docker exec cli peer chaincode instantiate -o orderer.example.com:7050 -C channel1 -n chaincode1 -l "golang" -v 1 -c "{\"Args\":[\"init\",\"a\",\"81\",\"b\",\"11\"]}" -P "OR('Org1MSP.member')"
 
 echo "Querying Chaincode.."
 sleep 5

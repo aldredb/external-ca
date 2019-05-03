@@ -111,7 +111,7 @@ Run chaincode
 
 ```bash
 docker exec cli peer chaincode install -n chaincode1 -p github.com/chaincode1 -v 1
-docker exec cli peer chaincode instantiate -o orderer.example.com:7050 -C channel1 -n chaincode1 -l "golang" -v 1 -c "{\"Args\":[\"init\",\"a\",\"81\",\"b\",\"11\"]}" -P "OR('Org1MSP.member','Org2MSP.member')"
+docker exec cli peer chaincode instantiate -o orderer.example.com:7050 -C channel1 -n chaincode1 -l "golang" -v 1 -c "{\"Args\":[\"init\",\"a\",\"81\",\"b\",\"11\"]}" -P "OR('Org1MSP.member')"
 docker exec cli peer chaincode query -C channel1 -n chaincode1 -c '{"Args":["query","a"]}'
 ```
 

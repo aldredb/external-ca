@@ -1,0 +1,58 @@
+{
+  "ca": {
+      "debug": false,
+      "ca": {
+          "keyfile": "<insert base64-encoded key>",
+          "certfile": "<insert base64-encoded cert>",
+          "chainfile": "<insert base64-encoded chainfile>"
+      },
+      "registry": {
+          "maxenrollments": -1,
+          "identities": [
+              {
+                  "name": "admin",
+                  "pass": "adminpw",
+                  "type": "client",
+                  "affiliation": "",
+                  "attrs": {
+                      "hf.Registrar.Roles": "*",
+                      "hf.Registrar.DelegateRoles": "*",
+                      "hf.Revoker": true,
+                      "hf.IntermediateCA": true,
+                      "hf.GenCRL": true,
+                      "hf.Registrar.Attributes": "*",
+                      "hf.AffiliationMgr": true
+                  }
+              }
+          ]
+      }
+  },
+  "tlsca": {
+    "debug": false,
+    "ca": {
+          "keyfile": "<insert base64-encoded key>",
+          "certfile": "<insert base64-encoded cert>",
+          "chainfile": "<insert base64-encoded chainfile>"
+    },
+    "registry": {
+        "maxenrollments": -1,
+        "identities": [
+            {
+                "name": "admin",
+                "pass": "adminpw",
+                "type": "client",
+                "affiliation": "",
+                "attrs": {
+                    "hf.Registrar.Roles": "*",
+                    "hf.Registrar.DelegateRoles": "*",
+                    "hf.Revoker": true,
+                    "hf.IntermediateCA": true,
+                    "hf.GenCRL": true,
+                    "hf.Registrar.Attributes": "*",
+                    "hf.AffiliationMgr": true
+                }
+            }
+        ]
+    }
+  }
+}

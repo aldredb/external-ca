@@ -1,5 +1,6 @@
 bin/
-rca/
+identity-rca/
+tls-rca/
 crypto-config/
 config/*.block
 config/*.tx 
@@ -10,3 +11,9 @@ chaincode/hyperledger/
 ca-config/msp
 ca-config/*.db
 ca-config/*Key
+ca-config/tlsca/msp
+ca-config/tlsca/*.db
+ca-config/tlsca/*.db
+ca-config/tlsca/*Key
+ica.json
+kubeconfig

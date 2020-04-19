@@ -39,34 +39,8 @@
 # Version of config file
 version: 1.4.0-stable
 
-# Server's listening port (default: 7054)
-port: 7054
-
-# Enables debug logging (default: false)
-debug: false
-
 # Size limit of an acceptable CRL in bytes (default: 512000)
 crlsizelimit: 512000
-
-#############################################################################
-#  TLS section for the server's listening port
-#
-#  The following types are supported for client authentication: NoClientCert,
-#  RequestClientCert, RequireAnyClientCert, VerifyClientCertIfGiven,
-#  and RequireAndVerifyClientCert.
-#
-#  Certfiles is a list of root certificate authorities that the server uses
-#  when verifying client certificates.
-#############################################################################
-tls:
-  # Enable TLS (default: false)
-  enabled: false
-  # TLS for the server's listening port
-  certfile:
-  keyfile:
-  clientauth:
-    type: noclientcert
-    certfiles:
 
 #############################################################################
 #  The CA section contains information related to the Certificate Authority
@@ -80,13 +54,13 @@ tls:
 #############################################################################
 ca:
   # Name of this CA
-  name: ca
+  name: tlsca
   # Key file (is only used to import a private key into BCCSP)
-  keyfile: /etc/hyperledger/fabric-ca-server-config/ca/ica.identity.org1.example.com.key
+  keyfile: /etc/hyperledger/fabric-ca-server-config/tlsca/ica.tls.org1.example.com.key
   # Certificate file (default: ca-cert.pem)
-  certfile: /etc/hyperledger/fabric-ca-server-config/ca/ica.identity.org1.example.com.cert
+  certfile: /etc/hyperledger/fabric-ca-server-config/tlsca/ica.tls.org1.example.com.cert
   # Chain file
-  chainfile: /etc/hyperledger/fabric-ca-server-config/ca/chain.identity.org1.example.com.cert
+  chainfile: /etc/hyperledger/fabric-ca-server-config/tlsca/chain.tls.org1.example.com.cert
 
 #############################################################################
 #  The gencrl REST endpoint is used to generate a CRL that contains revoked
@@ -326,38 +300,6 @@ bccsp:
         filekeystore:
             # The directory used for the software file-based keystore
             keystore: msp/keystore
-
-#############################################################################
-# Multi CA section
-#
-# Each Fabric CA server contains one CA by default.  This section is used
-# to configure multiple CAs in a single server.
-#
-# 1) --cacount <number-of-CAs>
-# Automatically generate <number-of-CAs> non-default CAs.  The names of these
-# additional CAs are "ca1", "ca2", ... "caN", where "N" is <number-of-CAs>
-# This is particularly useful in a development environment to quickly set up
-# multiple CAs. Note that, this config option is not applicable to intermediate CA server
-# i.e., Fabric CA server that is started with intermediate.parentserver.url config
-# option (-u command line option)
-#
-# 2) --cafiles <CA-config-files>
-# For each CA config file in the list, generate a separate signing CA.  Each CA
-# config file in this list MAY contain all of the same elements as are found in
-# the server config file except port, debug, and tls sections.
-#
-# Examples:
-# fabric-ca-server start -b admin:adminpw --cacount 2
-#
-# fabric-ca-server start -b admin:adminpw --cafiles ca/ca1/fabric-ca-server-config.yaml
-# --cafiles ca/ca2/fabric-ca-server-config.yaml
-#
-#############################################################################
-
-cacount:
-
-cafiles:
-- /etc/hyperledger/fabric-ca-server/tlsca/fabric-ca-server-config.yaml
 
 #############################################################################
 # Intermediate CA section

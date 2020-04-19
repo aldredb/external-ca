@@ -7,7 +7,7 @@ default_ca = CA_default
 
 [ CA_default ]
 # Directory and file locations.
-dir               = ./rca
+dir               = ./tls-rca
 certs             = $dir/certs
 crl_dir           = $dir/crl
 new_certs_dir     = $dir/newcerts
@@ -16,12 +16,12 @@ serial            = $dir/serial
 RANDFILE          = $dir/private/.rand
 
 # The root key and root certificate.
-private_key       = $dir/private/rca.org1.example.com.key.pem
-certificate       = $dir/certs/rca.org1.example.com.crt.pem
+private_key       = $dir/private/rca.tls.org1.example.com.key
+certificate       = $dir/certs/rca.tls.org1.example.com.cert
 
 # For certificate revocation lists.
 crlnumber         = $dir/crlnumber
-crl               = $dir/crl/rca.org1.example.com.crl.pem
+crl               = $dir/crl/rca.tls.org1.example.com.crl
 crl_extensions    = crl_ext
 default_crl_days  = 30
 

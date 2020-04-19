@@ -1,0 +1,58 @@
+{
+  "ca": {
+      "debug": false,
+      "ca": {
+          "keyfile": "INSERT_BASE64_ENCODED_KEY",
+          "certfile": "INSERT_BASE64_ENCODED_CERT",
+          "chainfile": "INSERT_BASE64_ENCODED_CHAINFILE"
+      },
+      "registry": {
+          "maxenrollments": -1,
+          "identities": [
+              {
+                  "name": "admin",
+                  "pass": "adminpw",
+                  "type": "client",
+                  "affiliation": "",
+                  "attrs": {
+                      "hf.Registrar.Roles": "*",
+                      "hf.Registrar.DelegateRoles": "*",
+                      "hf.Revoker": true,
+                      "hf.IntermediateCA": true,
+                      "hf.GenCRL": true,
+                      "hf.Registrar.Attributes": "*",
+                      "hf.AffiliationMgr": true
+                  }
+              }
+          ]
+      }
+  },
+  "tlsca": {
+    "debug": false,
+    "ca": {
+          "keyfile": "INSERT_BASE64_ENCODED_KEY",
+          "certfile": "INSERT_BASE64_ENCODED_CERT",
+          "chainfile": "INSERT_BASE64_ENCODED_CHAINFILE"
+    },
+    "registry": {
+        "maxenrollments": -1,
+        "identities": [
+            {
+                "name": "admin",
+                "pass": "adminpw",
+                "type": "client",
+                "affiliation": "",
+                "attrs": {
+                    "hf.Registrar.Roles": "*",
+                    "hf.Registrar.DelegateRoles": "*",
+                    "hf.Revoker": true,
+                    "hf.IntermediateCA": true,
+                    "hf.GenCRL": true,
+                    "hf.Registrar.Attributes": "*",
+                    "hf.AffiliationMgr": true
+                }
+            }
+        ]
+    }
+  }
+}

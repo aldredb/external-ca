@@ -2,9 +2,9 @@
   "ca": {
       "debug": false,
       "ca": {
-          "keyfile": "<insert base64-encoded key>",
-          "certfile": "<insert base64-encoded cert>",
-          "chainfile": "<insert base64-encoded chainfile>"
+          "keyfile": "INSERT_BASE64_ENCODED_KEY",
+          "certfile": "INSERT_BASE64_ENCODED_CERT",
+          "chainfile": "INSERT_BASE64_ENCODED_CHAINFILE"
       },
       "registry": {
           "maxenrollments": -1,
@@ -30,9 +30,9 @@
   "tlsca": {
     "debug": false,
     "ca": {
-          "keyfile": "<insert base64-encoded key>",
-          "certfile": "<insert base64-encoded cert>",
-          "chainfile": "<insert base64-encoded chainfile>"
+          "keyfile": "INSERT_BASE64_ENCODED_KEY",
+          "certfile": "INSERT_BASE64_ENCODED_CERT",
+          "chainfile": "INSERT_BASE64_ENCODED_CHAINFILE"
     },
     "registry": {
         "maxenrollments": -1,

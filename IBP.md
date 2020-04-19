@@ -21,14 +21,14 @@ Copy the CA configuration template. You will need this JSON file to override the
 cp ica.json.template ica.json
 ```
 
-In `ica.json`, observe that you need to fill in the following:
+In `ica.json`, fill in the following:
 
-* `ca.ca.keyfile` - the Identity ICA's key
-* `ca.ca.certfile` - the Identity ICA's certificate
-* `ca.ca.chainfile` - the Identity ICA's chain certificates
-* `tlsca.ca.keyfile` - the TLS ICA's key
-* `tlsca.ca.certfile` - the TLS ICA's certificate
-* `tlsca.ca.chainfile` - the TLS ICA's chain certificates
+* `ca.ca.keyfile` - the Identity ICA's key in base64 format
+* `ca.ca.certfile` - the Identity ICA's certificate in base64 format
+* `ca.ca.chainfile` - the Identity ICA's chain certificates in base64 format
+* `tlsca.ca.keyfile` - the TLS ICA's key in base64 format
+* `tlsca.ca.certfile` - the TLS ICA's certificate in base64 format
+* `tlsca.ca.chainfile` - the TLS ICA's chain certificates in base64 format
 
 To retrieve `ca.ca.keyfile`:
 
@@ -40,35 +40,30 @@ cat crypto-config/peerOrganizations/org1.example.com/ca/ica.identity.org1.exampl
 To retrieve `ca.ca.certfile`:
 
 ```bash
-export FLAG=$(if [ "$(uname -s)" == "Linux" ]; then echo "-d"; else echo "-b 0"; fi)
 cat crypto-config/peerOrganizations/org1.example.com/ca/ica.identity.org1.example.com.cert | base64 $FLAG
 ```
 
 To retrieve `ca.ca.chainfile`:
 
 ```bash
-export FLAG=$(if [ "$(uname -s)" == "Linux" ]; then echo "-d"; else echo "-b 0"; fi)
 cat crypto-config/peerOrganizations/org1.example.com/ca/chain.identity.org1.example.com.cert | base64 $FLAG
 ```
 
 To retrieve `tlsca.ca.keyfile`:
 
 ```bash
-export FLAG=$(if [ "$(uname -s)" == "Linux" ]; then echo "-d"; else echo "-b 0"; fi)
 cat crypto-config/peerOrganizations/org1.example.com/tlsca/ica.tls.org1.example.com.key | base64 $FLAG
 ```
 
 To retrieve `tlsca.ca.certfile`:
 
 ```bash
-export FLAG=$(if [ "$(uname -s)" == "Linux" ]; then echo "-d"; else echo "-b 0"; fi)
 cat crypto-config/peerOrganizations/org1.example.com/tlsca/ica.tls.org1.example.com.cert | base64 $FLAG
 ```
 
 To retrieve `tlsca.ca.chainfile`:
 
 ```bash
-export FLAG=$(if [ "$(uname -s)" == "Linux" ]; then echo "-d"; else echo "-b 0"; fi)
 cat crypto-config/peerOrganizations/org1.example.com/tlsca/chain.tls.org1.example.com.cert | base64 $FLAG
 ```
 

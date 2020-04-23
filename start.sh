@@ -96,7 +96,9 @@ configtxgen -profile Channel -outputCreateChannelTx ./config/channel1.tx -channe
 
 echo "Starting Orderer, Peer and CLI.."
 docker-compose up -d orderer.example.com peer0.org1.example.com cli
-sleep 10
+
+echo "Sleeping for 20 seconds.."
+sleep 20
 
 echo "Creating Channel channel1.."
 docker exec cli peer channel create -o orderer.example.com:7050 --tls --cafile /var/crypto/ordererOrganizations/example.com/msp/tlscacerts/tlsca.example.com-cert.pem -c channel1 -f /config/channel1.tx

@@ -12,6 +12,9 @@ ca-config/tlsca/msp
 ca-config/tlsca/*.db
 ca-config/tlsca/*.db
 ca-config/tlsca/*Key
+newca-config/msp
+newca-config/*.db
+newca-config/*Key
 ica.json
 kubeconfig
 newica/*

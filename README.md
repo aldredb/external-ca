@@ -50,9 +50,10 @@ mkdir -p $ORG_DIR/ca $ORG_DIR/tlsca $ORG_DIR/msp $PEER_DIR $IDENTITY_REGISTRAR_D
 Create folder structure for **Identity Root CA**
 
 ```bash
-mkdir -p identity-rca/private identity-rca/certs identity-rca/newcerts
+mkdir -p identity-rca/private identity-rca/certs identity-rca/newcerts identity-rca/crl
 touch identity-rca/index.txt identity-rca/serial
 echo 1000 > identity-rca/serial
+echo 1000 > identity-rca/crlnumber
 ```
 
 Generate the Identity Root CA's private key. cryptogen and default Fabric CA settings uses ECDSA with curve prime256v1, so we are going to follow that standard. I have not experimented with other combination of algorithm and key sizes.
@@ -70,9 +71,10 @@ openssl req -config openssl_root-identity.cnf -new -x509 -sha256 -extensions v3_
 In a similar fashion, create the **TLS Root CA** folder structure and generate the certificate and key pairs
 
 ```bash
-mkdir -p tls-rca/private tls-rca/certs tls-rca/newcerts
+mkdir -p tls-rca/private tls-rca/certs tls-rca/newcerts tls-rca/crl
 touch tls-rca/index.txt tls-rca/serial
 echo 1000 > tls-rca/serial
+echo 1000 > tls-rca/crlnumber
 
 openssl ecparam -name prime256v1 -genkey -noout -out tls-rca/private/rca.tls.org1.example.com.key
 openssl req -config openssl_root-tls.cnf -new -x509 -sha256 -extensions v3_ca -key tls-rca/private/rca.tls.org1.example.com.key -out tls-rca/certs/rca.tls.org1.example.com.cert -days 3650 -subj "/C=SG/ST=Singapore/L=Singapore/O=org1.example.com/OU=/CN=rca.tls.org1.example.com"
@@ -223,9 +225,10 @@ docker exec cli peer chaincode install -n chaincode1 -p github.com/chaincode1 -v
 docker exec cli peer chaincode instantiate -o orderer.example.com:7050 --tls --cafile /var/crypto/ordererOrganizations/example.com/msp/tlscacerts/tlsca.example.com-cert.pem -C channel1 -n chaincode1 -l "golang" -v 1 -c '{"Args":["init","a","81","b","11"]}' -P "OR('Org1MSP.member')"
 ```
 
-Attempt to query chaincode
+Attempt to invoke and query chaincode
 
 ```bash
+docker exec cli peer chaincode invoke -o orderer.example.com:7050 --tls --cafile /var/crypto/ordererOrganizations/example.com/msp/tlscacerts/tlsca.example.com-cert.pem -C channel1 -n chaincode1 -c '{"Args":["put", "z", "7"]}' --waitForEvent
 docker exec cli peer chaincode query -C channel1 -n chaincode1 -c '{"Args":["query","a"]}'
 ```
 

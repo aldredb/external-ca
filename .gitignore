@@ -2,10 +2,7 @@ bin/
 identity-rca/
 tls-rca/
 crypto-config/
-config/*.block
-config/*.tx 
-config/*.json
-config/*.yaml
+config/*
 .DS_Store
 chaincode/hyperledger/
 ca-config/msp
@@ -17,3 +14,4 @@ ca-config/tlsca/*.db
 ca-config/tlsca/*Key
 ica.json
 kubeconfig
+newica/*

@@ -97,7 +97,7 @@ export FABRIC_CA_CLIENT_HOME=$NEW_IDENTITY_REGISTRAR_DIR
 fabric-ca-client register --caname ca --id.name newpeer0@org1.example.com --id.secret mysecret --id.type peer --id.affiliation org1 -u http://localhost:8054
 
 echo "Sleeping for 30 seconds"
-sleep 30
+sleep 35
 
 export FABRIC_CA_CLIENT_HOME=$PEER_DIR
 fabric-ca-client enroll --caname ca --csr.names C=SG,ST=Singapore,L=Singapore,O=org1.example.com -u http://newpeer0@org1.example.com:mysecret@localhost:8054

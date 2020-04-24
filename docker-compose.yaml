@@ -49,6 +49,24 @@ services:
     networks:
       - basic
 
+  newica.org1.example.com:
+    image: hyperledger/fabric-ca:1.4.6
+    environment:
+      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
+      - FABRIC_CA_SERVER_CA_NAME=ca
+      - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server-config/newica.identity.org1.example.com.cert
+      - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/newica.identity.org1.example.com.key
+      - FABRIC_CA_SERVER_CA_CHAINFILE=/etc/hyperledger/fabric-ca-server-config/newchain.identity.org1.example.com.cert
+    ports:
+      - "8054:7054"
+    command: sh -c 'fabric-ca-server start -b admin:adminpw -d' 
+    volumes:
+      - ./newica/:/etc/hyperledger/fabric-ca-server-config
+      - ./newca-config/:/etc/hyperledger/fabric-ca-server
+    container_name: newica.org1.example.com
+    networks:
+      - basic
+
   peer0.org1.example.com:
     container_name: peer0.org1.example.com
     image: hyperledger/fabric-peer:1.4.6

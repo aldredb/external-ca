@@ -16,16 +16,18 @@ ADMIN_DIR=$ORG_DIR/users/Admin@org1.example.com
 mkdir -p $ORG_DIR/ca $ORG_DIR/tlsca $ORG_DIR/msp $PEER_DIR $IDENTITY_REGISTRAR_DIR $TLS_REGISTRAR_DIR $ADMIN_DIR
 
 echo "Creating Identity Root CA.."
-mkdir -p identity-rca/private identity-rca/certs identity-rca/newcerts
+mkdir -p identity-rca/private identity-rca/certs identity-rca/newcerts identity-rca/crl
 touch identity-rca/index.txt identity-rca/serial
 echo 1000 > identity-rca/serial
+echo 1000 > identity-rca/crlnumber
 openssl ecparam -name prime256v1 -genkey -noout -out identity-rca/private/rca.identity.org1.example.com.key
 openssl req -config openssl_root-identity.cnf -new -x509 -sha256 -extensions v3_ca -key identity-rca/private/rca.identity.org1.example.com.key -out identity-rca/certs/rca.identity.org1.example.com.cert -days 3650 -subj "/C=SG/ST=Singapore/L=Singapore/O=org1.example.com/OU=/CN=rca.identity.org1.example.com"
 
 echo "Creating TLS Root CA.."
-mkdir -p tls-rca/private tls-rca/certs tls-rca/newcerts
+mkdir -p tls-rca/private tls-rca/certs tls-rca/newcerts tls-rca/crl
 touch tls-rca/index.txt tls-rca/serial
 echo 1000 > tls-rca/serial
+echo 1000 > tls-rca/crlnumber
 openssl ecparam -name prime256v1 -genkey -noout -out tls-rca/private/rca.tls.org1.example.com.key
 openssl req -config openssl_root-tls.cnf -new -x509 -sha256 -extensions v3_ca -key tls-rca/private/rca.tls.org1.example.com.key -out tls-rca/certs/rca.tls.org1.example.com.cert -days 3650 -subj "/C=SG/ST=Singapore/L=Singapore/O=org1.example.com/OU=/CN=rca.tls.org1.example.com"
 
@@ -94,7 +96,9 @@ configtxgen -profile Channel -outputCreateChannelTx ./config/channel1.tx -channe
 
 echo "Starting Orderer, Peer and CLI.."
 docker-compose up -d orderer.example.com peer0.org1.example.com cli
-sleep 10
+
+echo "Sleeping for 20 seconds.."
+sleep 20
 
 echo "Creating Channel channel1.."
 docker exec cli peer channel create -o orderer.example.com:7050 --tls --cafile /var/crypto/ordererOrganizations/example.com/msp/tlscacerts/tlsca.example.com-cert.pem -c channel1 -f /config/channel1.tx
@@ -107,7 +111,10 @@ docker exec cli peer chaincode install -n chaincode1 -p github.com/chaincode1 -v
 
 echo "Instantiating Chaincode.."
 docker exec cli peer chaincode instantiate -o orderer.example.com:7050 --tls --cafile /var/crypto/ordererOrganizations/example.com/msp/tlscacerts/tlsca.example.com-cert.pem -C channel1 -n chaincode1 -l "golang" -v 1 -c '{"Args":["init","a","81","b","11"]}' -P "OR('Org1MSP.member')"
+sleep 5
+
+echo "Invoking Chaincode.."
+docker exec cli peer chaincode invoke -o orderer.example.com:7050 --tls --cafile /var/crypto/ordererOrganizations/example.com/msp/tlscacerts/tlsca.example.com-cert.pem -C channel1 -n chaincode1 -c '{"Args":["put", "z", "7"]}' --waitForEvent
 
 echo "Querying Chaincode.."
-sleep 5
 docker exec cli peer chaincode query -C channel1 -n chaincode1 -c '{"Args":["query","a"]}'

@@ -36,11 +36,12 @@ NEWADMIN_DIR=crypto-config/peerOrganizations/org1.example.com/users/newadmin@org
 mkdir -p $NEWADMIN_DIR
 export FABRIC_CA_CLIENT_HOME=$NEWADMIN_DIR
 fabric-ca-client enroll --caname ca --csr.names C=SG,ST=Singapore,L=Singapore,O=org1.example.com -u http://newadmin@org1.example.com:mysecret@localhost:8054
-mkdir -p $NEWADMIN_DIR/msp/admincerts
-cp $NEWADMIN_DIR/msp/signcerts/cert.pem $NEWADMIN_DIR/msp/admincerts
+cp newica/newchain.identity.org1.example.com.cert $NEWADMIN_DIR/msp/chain.cert
+cp $PWD/nodeou.yaml $NEWADMIN_DIR/msp/config.yaml
 
 echo "Perform channel configuration update.."
 NEWICA=$(cat newica/newica.identity.org1.example.com.cert | base64 $FLAG)
+NEWCHAIN=$(cat newica/newchain.identity.org1.example.com.cert | base64 $FLAG)
 NEWADMIN=$(cat $NEWADMIN_DIR/msp/signcerts/cert.pem | base64 $FLAG)
 WORKING_DIR=/config/channel1_update1
 
@@ -49,24 +50,32 @@ retrieve_current_config update1 channel1 Org1MSP \
   orderer.example.com:7050 \
   /var/crypto/ordererOrganizations/example.com/msp/tlscacerts/tlsca.example.com-cert.pem
 
-  docker exec -e "WORKING_DIR=$WORKING_DIR" -e "CRL=$CRL" cli \
+docker exec -e "WORKING_DIR=$WORKING_DIR" -e "CRL=$CRL" cli \
   sh -c 'jq ".channel_group.groups.Application.groups.Org1MSP.values.MSP.value.config.revocation_list |= . + [\"$CRL\"]" $WORKING_DIR/current_config.json \
   > $WORKING_DIR/tmp1_config.json'
 
 docker exec -e "WORKING_DIR=$WORKING_DIR" cli \
-  sh -c 'jq "del(.channel_group.groups.Application.groups.Org1MSP.values.MSP.value.config.admins[0])" $WORKING_DIR/tmp1_config.json \
+  sh -c 'jq "del(.channel_group.groups.Application.groups.Org1MSP.values.MSP.value.config.intermediate_certs[0])" $WORKING_DIR/tmp1_config.json \
   > $WORKING_DIR/tmp2_config.json'
 
-docker exec -e "WORKING_DIR=$WORKING_DIR" cli \
-  sh -c 'jq "del(.channel_group.groups.Application.groups.Org1MSP.values.MSP.value.config.intermediate_certs[0])" $WORKING_DIR/tmp2_config.json \
+docker exec -e "WORKING_DIR=$WORKING_DIR" -e "NEWICA=$NEWICA" cli \
+  sh -c 'jq ".channel_group.groups.Application.groups.Org1MSP.values.MSP.value.config.intermediate_certs |= . + [\"$NEWICA\"]" $WORKING_DIR/tmp2_config.json \
   > $WORKING_DIR/tmp3_config.json'
 
-docker exec -e "WORKING_DIR=$WORKING_DIR" -e "NEWICA=$NEWICA" cli \
-  sh -c 'jq ".channel_group.groups.Application.groups.Org1MSP.values.MSP.value.config.intermediate_certs |= . + [\"$NEWICA\"]" $WORKING_DIR/tmp3_config.json \
+docker exec -e "WORKING_DIR=$WORKING_DIR" -e "NEWCHAIN=$NEWCHAIN" cli \
+  sh -c 'jq ".channel_group.groups.Application.groups.Org1MSP.values.MSP.value.config.fabric_node_ous.admin_ou_identifier.certificate = \"$NEWCHAIN\"" $WORKING_DIR/tmp3_config.json \
   > $WORKING_DIR/tmp4_config.json'
 
-docker exec -e "WORKING_DIR=$WORKING_DIR" -e "NEWADMIN=$NEWADMIN" cli \
-  sh -c 'jq ".channel_group.groups.Application.groups.Org1MSP.values.MSP.value.config.admins |= . + [\"$NEWADMIN\"]" $WORKING_DIR/tmp4_config.json \
+docker exec -e "WORKING_DIR=$WORKING_DIR" -e "NEWCHAIN=$NEWCHAIN" cli \
+  sh -c 'jq ".channel_group.groups.Application.groups.Org1MSP.values.MSP.value.config.fabric_node_ous.client_ou_identifier.certificate = \"$NEWCHAIN\"" $WORKING_DIR/tmp4_config.json \
+  > $WORKING_DIR/tmp5_config.json'
+
+docker exec -e "WORKING_DIR=$WORKING_DIR" -e "NEWCHAIN=$NEWCHAIN" cli \
+  sh -c 'jq ".channel_group.groups.Application.groups.Org1MSP.values.MSP.value.config.fabric_node_ous.orderer_ou_identifier.certificate = \"$NEWCHAIN\"" $WORKING_DIR/tmp5_config.json \
+  > $WORKING_DIR/tmp6_config.json'
+
+docker exec -e "WORKING_DIR=$WORKING_DIR" -e "NEWCHAIN=$NEWCHAIN" cli \
+  sh -c 'jq ".channel_group.groups.Application.groups.Org1MSP.values.MSP.value.config.fabric_node_ous.peer_ou_identifier.certificate = \"$NEWCHAIN\"" $WORKING_DIR/tmp6_config.json \
   > $WORKING_DIR/modified_config.json'
 
 prepare_unsigned_modified_config update1 channel1
@@ -101,8 +110,8 @@ sleep 35
 
 export FABRIC_CA_CLIENT_HOME=$PEER_DIR
 fabric-ca-client enroll --caname ca --csr.names C=SG,ST=Singapore,L=Singapore,O=org1.example.com -u http://newpeer0@org1.example.com:mysecret@localhost:8054
-mkdir -p $PEER_DIR/msp/admincerts
-cp $NEWADMIN_DIR/msp/signcerts/cert.pem $PEER_DIR/msp/admincerts
+cp newica/newchain.identity.org1.example.com.cert $PEER_DIR/msp/chain.cert
+cp $PWD/nodeou.yaml $PEER_DIR/msp/config.yaml
 
 echo "Starting peer container.."
 docker start peer0.org1.example.com

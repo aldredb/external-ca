@@ -55,16 +55,18 @@ fabric-ca-client enroll --caname ca --csr.names C=SG,ST=Singapore,L=Singapore,O=
 echo "Sleeping for 30 seconds.."
 sleep 35
 
-fabric-ca-client register --caname ca --id.name Admin@org1.example.com --id.secret mysecret --id.type client --id.affiliation org1 -u http://localhost:7054
+fabric-ca-client register --caname ca --id.name Admin@org1.example.com --id.secret mysecret --id.type admin --id.affiliation org1 -u http://localhost:7054
 fabric-ca-client register --caname ca --id.name peer0.org1.example.com --id.secret mysecret --id.type peer --id.affiliation org1 -u http://localhost:7054
 
 export FABRIC_CA_CLIENT_HOME=$ADMIN_DIR
 fabric-ca-client enroll --caname ca --csr.names C=SG,ST=Singapore,L=Singapore,O=org1.example.com -m Admin@org1.example.com -u http://Admin@org1.example.com:mysecret@localhost:7054
-mkdir -p $ADMIN_DIR/msp/admincerts && cp $ADMIN_DIR/msp/signcerts/*.pem $ADMIN_DIR/msp/admincerts/
+cp $ORG_DIR/ca/chain.identity.org1.example.com.cert $ADMIN_DIR/msp/chain.cert
+cp $PWD/nodeou.yaml $ADMIN_DIR/msp/config.yaml
 
 export FABRIC_CA_CLIENT_HOME=$PEER_DIR
 fabric-ca-client enroll --caname ca --csr.names C=SG,ST=Singapore,L=Singapore,O=org1.example.com -m peer0.org1.example.com -u http://peer0.org1.example.com:mysecret@localhost:7054
-mkdir -p $PEER_DIR/msp/admincerts && cp $ADMIN_DIR/msp/signcerts/*.pem $PEER_DIR/msp/admincerts/
+cp $ORG_DIR/ca/chain.identity.org1.example.com.cert $PEER_DIR/msp/chain.cert
+cp $PWD/nodeou.yaml $PEER_DIR/msp/config.yaml
 
 echo "Registering and Enrolling Peer TLS Certificate-Key pair.."
 export FABRIC_CA_CLIENT_HOME=$TLS_REGISTRAR_DIR
@@ -83,11 +85,13 @@ rm -rf $PEER_DIR/tls/msp $PEER_DIR/tls/*.yaml
 
 echo "Preparing Org1 MSP.."
 mkdir -p $ORG_DIR/msp/admincerts $ORG_DIR/msp/intermediatecerts $ORG_DIR/msp/cacerts $ORG_DIR/msp/tlscacerts $ORG_DIR/msp/tlsintermediatecerts
-cp $ADMIN_DIR/msp/signcerts/*.pem $ORG_DIR/msp/admincerts/
 cp $PEER_DIR/msp/cacerts/*.pem $ORG_DIR/msp/cacerts/
 cp $PEER_DIR/msp/intermediatecerts/*.pem $ORG_DIR/msp/intermediatecerts/
 cp $PWD/tls-rca/certs/rca.tls.org1.example.com.cert $ORG_DIR/msp/tlscacerts/
 cp $ORG_DIR/tlsca/ica.tls.org1.example.com.cert $ORG_DIR/msp/tlsintermediatecerts/
+
+cp $ORG_DIR/ca/chain.identity.org1.example.com.cert $ORG_DIR/msp/chain.cert
+cp $PWD/nodeou.yaml $ORG_DIR/msp/config.yaml
 
 echo "Generating Orderer Genesis Block and Channel Transaction.."
 export FABRIC_CFG_PATH=${PWD}

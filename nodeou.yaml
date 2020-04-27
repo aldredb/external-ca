@@ -1,0 +1,14 @@
+NodeOUs:
+  Enable: true
+  ClientOUIdentifier:
+    Certificate: chain.cert
+    OrganizationalUnitIdentifier: client
+  PeerOUIdentifier:
+    Certificate: chain.cert
+    OrganizationalUnitIdentifier: peer
+  AdminOUIdentifier:
+    Certificate: chain.cert
+    OrganizationalUnitIdentifier: admin
+  OrdererOUIdentifier:
+    Certificate: chain.cert
+    OrganizationalUnitIdentifier: orderer

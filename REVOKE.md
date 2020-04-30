@@ -82,8 +82,8 @@ NEWADMIN_DIR=crypto-config/peerOrganizations/org1.example.com/users/newadmin@org
 mkdir -p $NEWADMIN_DIR
 export FABRIC_CA_CLIENT_HOME=$NEWADMIN_DIR
 fabric-ca-client enroll --caname ca --csr.names C=SG,ST=Singapore,L=Singapore,O=org1.example.com -u http://newadmin@org1.example.com:mysecret@localhost:8054
-mkdir -p $NEWADMIN_DIR/msp/admincerts
-cp $NEWADMIN_DIR/msp/signcerts/cert.pem $NEWADMIN_DIR/msp/admincerts
+cp newica/newchain.identity.org1.example.com.cert $NEWADMIN_DIR/msp/chain.cert
+cp $PWD/nodeou.yaml $NEWADMIN_DIR/msp/config.yaml
 ```
 
 ## Update channel configuration
@@ -98,7 +98,7 @@ The following activities will be performed as part of the channel configuration 
 
 1. Add the CRL into `Org1MSP` MSP definition
 2. Replace the compromized ICA's certificate with that of the new ICA in `Org1MSP` MSP definition
-3. Replace the current MSP Administrator's certificate with that of the new MSP Administrator in `Org1MSP` MSP definition
+3. Replace the `NodeOU` identifiers with the new certificate chain in `Org1MSP` MSP definition
 
 <img src="img/revoke-progress2.png" width="500" />
 
@@ -106,6 +106,7 @@ Technically speaking, replacing the compromized ICA's certificate (Step 2) is en
 
 ```bash
 NEWICA=$(cat newica/newica.identity.org1.example.com.cert | base64 $FLAG)
+NEWCHAIN=$(cat newica/newchain.identity.org1.example.com.cert | base64 $FLAG)
 NEWADMIN=$(cat $NEWADMIN_DIR/msp/signcerts/cert.pem | base64 $FLAG)
 WORKING_DIR=/config/channel1_update1
 
@@ -119,19 +120,27 @@ docker exec -e "WORKING_DIR=$WORKING_DIR" -e "CRL=$CRL" cli \
   > $WORKING_DIR/tmp1_config.json'
 
 docker exec -e "WORKING_DIR=$WORKING_DIR" cli \
-  sh -c 'jq "del(.channel_group.groups.Application.groups.Org1MSP.values.MSP.value.config.admins[0])" $WORKING_DIR/tmp1_config.json \
+  sh -c 'jq "del(.channel_group.groups.Application.groups.Org1MSP.values.MSP.value.config.intermediate_certs[0])" $WORKING_DIR/tmp1_config.json \
   > $WORKING_DIR/tmp2_config.json'
 
-docker exec -e "WORKING_DIR=$WORKING_DIR" cli \
-  sh -c 'jq "del(.channel_group.groups.Application.groups.Org1MSP.values.MSP.value.config.intermediate_certs[0])" $WORKING_DIR/tmp2_config.json \
+docker exec -e "WORKING_DIR=$WORKING_DIR" -e "NEWICA=$NEWICA" cli \
+  sh -c 'jq ".channel_group.groups.Application.groups.Org1MSP.values.MSP.value.config.intermediate_certs |= . + [\"$NEWICA\"]" $WORKING_DIR/tmp2_config.json \
   > $WORKING_DIR/tmp3_config.json'
 
-docker exec -e "WORKING_DIR=$WORKING_DIR" -e "NEWICA=$NEWICA" cli \
-  sh -c 'jq ".channel_group.groups.Application.groups.Org1MSP.values.MSP.value.config.intermediate_certs |= . + [\"$NEWICA\"]" $WORKING_DIR/tmp3_config.json \
+docker exec -e "WORKING_DIR=$WORKING_DIR" -e "NEWCHAIN=$NEWCHAIN" cli \
+  sh -c 'jq ".channel_group.groups.Application.groups.Org1MSP.values.MSP.value.config.fabric_node_ous.admin_ou_identifier.certificate = \"$NEWCHAIN\"" $WORKING_DIR/tmp3_config.json \
   > $WORKING_DIR/tmp4_config.json'
 
-docker exec -e "WORKING_DIR=$WORKING_DIR" -e "NEWADMIN=$NEWADMIN" cli \
-  sh -c 'jq ".channel_group.groups.Application.groups.Org1MSP.values.MSP.value.config.admins |= . + [\"$NEWADMIN\"]" $WORKING_DIR/tmp4_config.json \
+docker exec -e "WORKING_DIR=$WORKING_DIR" -e "NEWCHAIN=$NEWCHAIN" cli \
+  sh -c 'jq ".channel_group.groups.Application.groups.Org1MSP.values.MSP.value.config.fabric_node_ous.client_ou_identifier.certificate = \"$NEWCHAIN\"" $WORKING_DIR/tmp4_config.json \
+  > $WORKING_DIR/tmp5_config.json'
+
+docker exec -e "WORKING_DIR=$WORKING_DIR" -e "NEWCHAIN=$NEWCHAIN" cli \
+  sh -c 'jq ".channel_group.groups.Application.groups.Org1MSP.values.MSP.value.config.fabric_node_ous.orderer_ou_identifier.certificate = \"$NEWCHAIN\"" $WORKING_DIR/tmp5_config.json \
+  > $WORKING_DIR/tmp6_config.json'
+
+docker exec -e "WORKING_DIR=$WORKING_DIR" -e "NEWCHAIN=$NEWCHAIN" cli \
+  sh -c 'jq ".channel_group.groups.Application.groups.Org1MSP.values.MSP.value.config.fabric_node_ous.peer_ou_identifier.certificate = \"$NEWCHAIN\"" $WORKING_DIR/tmp6_config.json \
   > $WORKING_DIR/modified_config.json'
 
 prepare_unsigned_modified_config update1 channel1
@@ -212,9 +221,8 @@ fabric-ca-client register --caname ca --id.name newpeer0@org1.example.com --id.s
 
 export FABRIC_CA_CLIENT_HOME=$PEER_DIR
 fabric-ca-client enroll --caname ca --csr.names C=SG,ST=Singapore,L=Singapore,O=org1.example.com -u http://newpeer0@org1.example.com:mysecret@localhost:8054
-
-mkdir -p $PEER_DIR/msp/admincerts
-cp $NEWADMIN_DIR/msp/signcerts/cert.pem $PEER_DIR/msp/admincerts
+cp newica/newchain.identity.org1.example.com.cert $PEER_DIR/msp/chain.cert
+cp $PWD/nodeou.yaml $PEER_DIR/msp/config.yaml
 ```
 
 Start the peer

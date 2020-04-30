@@ -142,7 +142,7 @@ fabric-ca-client enroll --caname ca --csr.names C=SG,ST=Singapore,L=Singapore,O=
 **admin** registers user **Admin@org1.example.com**, who is going to be the **org1.example.com**'s admin, and peer **peer0.org1.example.com**
 
 ```bash
-fabric-ca-client register --caname ca --id.name Admin@org1.example.com --id.secret mysecret --id.type client --id.affiliation org1 -u http://localhost:7054
+fabric-ca-client register --caname ca --id.name Admin@org1.example.com --id.secret mysecret --id.type admin --id.affiliation org1 -u http://localhost:7054
 fabric-ca-client register --caname ca --id.name peer0.org1.example.com --id.secret mysecret --id.type peer --id.affiliation org1 -u http://localhost:7054
 ```
 
@@ -151,7 +151,8 @@ Enroll **Admin@org1.example.com**
 ```bash
 export FABRIC_CA_CLIENT_HOME=$ADMIN_DIR
 fabric-ca-client enroll --caname ca --csr.names C=SG,ST=Singapore,L=Singapore,O=org1.example.com -m Admin@org1.example.com -u http://Admin@org1.example.com:mysecret@localhost:7054
-mkdir -p $ADMIN_DIR/msp/admincerts && cp $ADMIN_DIR/msp/signcerts/*.pem $ADMIN_DIR/msp/admincerts/
+cp $ORG_DIR/ca/chain.identity.org1.example.com.cert $ADMIN_DIR/msp/chain.cert
+cp $PWD/nodeou.yaml $ADMIN_DIR/msp/config.yaml
 ```
 
 Enroll **peer0.org1.example.com**
@@ -159,7 +160,8 @@ Enroll **peer0.org1.example.com**
 ```bash
 export FABRIC_CA_CLIENT_HOME=$PEER_DIR
 fabric-ca-client enroll --caname ca --csr.names C=SG,ST=Singapore,L=Singapore,O=org1.example.com -m peer0.org1.example.com -u http://peer0.org1.example.com:mysecret@localhost:7054
-mkdir -p $PEER_DIR/msp/admincerts && cp $ADMIN_DIR/msp/signcerts/*.pem $PEER_DIR/msp/admincerts/
+cp $ORG_DIR/ca/chain.identity.org1.example.com.cert $PEER_DIR/msp/chain.cert
+cp $PWD/nodeou.yaml $PEER_DIR/msp/config.yaml
 ```
 
 Generate TLS certificate and key pair for **peer0.org1.example.com** to establish TLS sessions with other components. There is no need to generate TLS certificate and key pair for **Admin@org1.example.com** as a user does not use any TLS communication. Notice that the parameter `--caname` is set to `tlsca`
@@ -186,15 +188,17 @@ At this point, we have successfully demonstrated that it is possible to combine 
 
 <img src="img/network.png" width="500" />
 
-Prepare **org1.example.com**'s MSP folder. We set **Admin@org1.example.com** as the admin of the organisation.
+Prepare **org1.example.com**'s MSP folder.
 
 ```bash
 mkdir -p $ORG_DIR/msp/admincerts $ORG_DIR/msp/intermediatecerts $ORG_DIR/msp/cacerts $ORG_DIR/msp/tlscacerts $ORG_DIR/msp/tlsintermediatecerts
-cp $ADMIN_DIR/msp/signcerts/*.pem $ORG_DIR/msp/admincerts/
 cp $PEER_DIR/msp/cacerts/*.pem $ORG_DIR/msp/cacerts/
 cp $PEER_DIR/msp/intermediatecerts/*.pem $ORG_DIR/msp/intermediatecerts/
 cp $PWD/tls-rca/certs/rca.tls.org1.example.com.cert $ORG_DIR/msp/tlscacerts/
 cp $ORG_DIR/tlsca/ica.tls.org1.example.com.cert $ORG_DIR/msp/tlsintermediatecerts/
+
+cp $ORG_DIR/ca/chain.identity.org1.example.com.cert $ORG_DIR/msp/chain.cert
+cp $PWD/nodeou.yaml $ORG_DIR/msp/config.yaml
 ```
 
 Create Orderer Genesis Block and Channel Transaction

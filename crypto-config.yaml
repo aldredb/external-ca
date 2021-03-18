@@ -8,11 +8,11 @@
 # ---------------------------------------------------------------------------
 OrdererOrgs:
   - Name: Orderer
-    Domain: example.com
+    Domain: orderer.example.com
     Specs:
-      - Hostname: orderer0
-      - Hostname: orderer1
-      - Hostname: orderer2
+      - Hostname: o1
+      - Hostname: o2
+      - Hostname: o3
 
 PeerOrgs:
   - Name: Org1

@@ -152,8 +152,6 @@ Profiles:
             <<: *ChannelCapabilities
         Orderer:
             <<: *OrdererDefaults
-            Capabilities:
-                <<: *OrdererCapabilities
             OrdererType: etcdraft
             EtcdRaft:
                 Consenters:
@@ -177,7 +175,6 @@ Profiles:
             - *OrdererOrg
             Capabilities:
                 <<: *OrdererCapabilities
-        
         Application:
             <<: *ApplicationDefaults
             Organizations:

@@ -113,7 +113,7 @@ cp $PEER_DIR/tls/msp/keystore/* $PEER_DIR/tls/server.key
 cat $PEER_DIR/tls/msp/intermediatecerts/*.pem \
 $PEER_DIR/tls/msp/cacerts/*.pem > $PEER_DIR/tls/ca.crt
 
-# rm -rf $PEER_DIR/tls/msp $PEER_DIR/tls/*.yaml
+rm -rf $PEER_DIR/tls/msp $PEER_DIR/tls/*.yaml
 
 export PEER_DIR=$ORG_DIR/orderers/o2.orderer.example.com
 cp $PEER_DIR/tls/msp/signcerts/*.pem $PEER_DIR/tls/server.crt
@@ -122,7 +122,7 @@ cp $PEER_DIR/tls/msp/keystore/* $PEER_DIR/tls/server.key
 cat $PEER_DIR/tls/msp/intermediatecerts/*.pem \
 $PEER_DIR/tls/msp/cacerts/*.pem > $PEER_DIR/tls/ca.crt
 
-# rm -rf $PEER_DIR/tls/msp $PEER_DIR/tls/*.yaml
+rm -rf $PEER_DIR/tls/msp $PEER_DIR/tls/*.yaml
 
 
 export PEER_DIR=$ORG_DIR/orderers/o3.orderer.example.com
@@ -132,7 +132,7 @@ cp $PEER_DIR/tls/msp/keystore/* $PEER_DIR/tls/server.key
 cat $PEER_DIR/tls/msp/intermediatecerts/*.pem \
 $PEER_DIR/tls/msp/cacerts/*.pem > $PEER_DIR/tls/ca.crt
 
-# rm -rf $PEER_DIR/tls/msp $PEER_DIR/tls/*.yaml
+rm -rf $PEER_DIR/tls/msp $PEER_DIR/tls/*.yaml
 
 
 cd ./crypto-config/ordererOrganizations/orderer.example.com/users/Admin@orderer.example.com/msp

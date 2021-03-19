@@ -27,7 +27,6 @@ openssl ecparam -name prime256v1 -genkey -noout \
 
 cat /etc/ssl/openssl.cnf | sed "s/RANDFILE\s*=\s*\$ENV::HOME\/\.rnd/#/" > rnd_openssl.cnf
 
-
 openssl req -config openssl_root-identity.cnf -new -x509 -sha256 -extensions v3_ca \
 -key identity-rca/private/rca.identity.org1.example.com.key -out \
 identity-rca/certs/rca.identity.org1.example.com.cert -days 3650 -subj \
@@ -75,4 +74,8 @@ $ORG_DIR/tlsca/ica.tls.org1.example.com.csr \
 openssl ca -batch -config openssl_root-tls.cnf -extensions v3_intermediate_ca \
 -days 1825 -notext -md sha256 -in $ORG_DIR/tlsca/ica.tls.org1.example.com.csr \
 -out $ORG_DIR/tlsca/ica.tls.org1.example.com.cert
+
+cat $ORG_DIR/tlsca/ica.tls.org1.example.com.cert $PWD/tls-rca/certs/rca.tls.org1.example.com.cert > $ORG_DIR/tlsca/chain.tls.org1.example.com.cert
+
+cat $ORG_DIR/tlsca/chain.tls.org1.example.com.cert
 

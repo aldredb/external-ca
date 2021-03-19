@@ -74,7 +74,7 @@ Orderer: &OrdererDefaults
 
     Addresses: # orderer 叢集節點
         - o1.orderer.example.com:7050
-        - o2.orderer.example.com:8050
+        - o2.orderer.example.com:7050
         - o3.orderer.example.com:7050
 
     # Batch Timeout: The amount of time to wait before creating a batch

@@ -82,7 +82,7 @@ ca:
   # Name of this CA
   name: ca
   # Key file (is only used to import a private key into BCCSP)
-  keyfile: /etc/hyperledger/fabric-ca-server-config/ca/ica.identity.org1.example.com.key
+  keyfile: /etc/hyperledger/fabric-ca-server-config/ca/ica.identity.org1.example.com.key.pem
   # Certificate file (default: ca-cert.pem)
   certfile: /etc/hyperledger/fabric-ca-server-config/ca/ica.identity.org1.example.com.cert
   # Chain file

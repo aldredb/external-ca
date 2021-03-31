@@ -56,7 +56,7 @@ ca:
   # Name of this CA
   name: tlsca
   # Key file (is only used to import a private key into BCCSP)
-  keyfile: /etc/hyperledger/fabric-ca-server-config/tlsca/ica.tls.orderer.example.com.key
+  keyfile: /etc/hyperledger/fabric-ca-server-config/tlsca/ica.tls.orderer.example.com.key.pem
   # Certificate file (default: ca-cert.pem)
   certfile: /etc/hyperledger/fabric-ca-server-config/tlsca/ica.tls.orderer.example.com.cert
   # Chain file
@@ -282,7 +282,6 @@ csr:
         O: Hyperledger
         OU: Fabric
    hosts:
-     - 4b0f958d5c93
      - localhost
    ca:
       expiry: 131400h

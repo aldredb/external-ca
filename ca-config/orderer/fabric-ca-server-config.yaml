@@ -62,8 +62,8 @@ tls:
   # Enable TLS (default: false)
   enabled: false
   # TLS for the server's listening port
-  certfile:
-  keyfile:
+  certfile: /var/hyperledger/orderer/tls/server.crt
+  keyfile: /var/hyperledger/orderer/tls/server.key
   clientauth:
     type: noclientcert
     certfiles:
@@ -82,7 +82,7 @@ ca:
   # Name of this CA
   name: ca
   # Key file (is only used to import a private key into BCCSP)
-  keyfile: /etc/hyperledger/fabric-ca-server-config/ca/ica.identity.orderer.example.com.key
+  keyfile: /etc/hyperledger/fabric-ca-server-config/ca/ica.identity.orderer.example.com.key.pem
   # Certificate file (default: ca-cert.pem)
   certfile: /etc/hyperledger/fabric-ca-server-config/ca/ica.identity.orderer.example.com.cert
   # Chain file
@@ -308,7 +308,6 @@ csr:
         O: Hyperledger
         OU: Fabric
    hosts:
-     - 4b0f958d5c93
      - localhost
    ca:
       expiry: 131400h

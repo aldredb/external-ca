@@ -87,32 +87,22 @@ sleep 20
 
 fabric-ca-client register --caname tlsca --id.name o1.orderer.example.com \
 --id.secret mysecret --id.type orderer \
---enrollment.profile tls \
 -u http://localhost:7055
-
 fabric-ca-client register --caname tlsca --id.name o2.orderer.example.com \
 --id.secret mysecret --id.type orderer \
---enrollment.profile tls \
 -u http://localhost:7055
-
 fabric-ca-client register --caname tlsca --id.name o3.orderer.example.com \
 --id.secret mysecret --id.type orderer \
---enrollment.profile tls \
 -u http://localhost:7055
 
 export FABRIC_CA_CLIENT_HOME=$ORG_DIR/orderers/o1.orderer.example.com/tls
 fabric-ca-client enroll --caname tlsca --csr.names "${CSR_NAMES}" \
---enrollment.profile tls \
 -m o1.orderer.example.com -u http://o1.orderer.example.com:mysecret@localhost:7055
-
 export FABRIC_CA_CLIENT_HOME=$ORG_DIR/orderers/o2.orderer.example.com/tls
 fabric-ca-client enroll --caname tlsca --csr.names "${CSR_NAMES}" \
---enrollment.profile tls \
 -m o2.orderer.example.com -u http://o2.orderer.example.com:mysecret@localhost:7055
-
 export FABRIC_CA_CLIENT_HOME=$ORG_DIR/orderers/o3.orderer.example.com/tls
 fabric-ca-client enroll --caname tlsca --csr.names "${CSR_NAMES}" \
---enrollment.profile tls \
 -m o3.orderer.example.com -u http://o3.orderer.example.com:mysecret@localhost:7055
 
 
@@ -120,49 +110,36 @@ export PEER_DIR=$ORG_DIR/orderers/o1.orderer.example.com
 cp $PEER_DIR/tls/msp/signcerts/*.pem $PEER_DIR/tls/server.crt
 cp $PEER_DIR/tls/msp/keystore/* $PEER_DIR/tls/server.key
 
-cat $PEER_DIR/tls/msp/tlsintermediatecerts/*.pem \
-$PEER_DIR/tls/msp/tlscacerts/*.pem > $PEER_DIR/tls/ca.crt
+cat $PEER_DIR/tls/msp/intermediatecerts/*.pem \
+$PEER_DIR/tls/msp/cacerts/*.pem > $PEER_DIR/tls/ca.crt
 
-#rm -rf $PEER_DIR/tls/msp $PEER_DIR/tls/*.yaml
+rm -rf $PEER_DIR/tls/msp $PEER_DIR/tls/*.yaml
 
 export PEER_DIR=$ORG_DIR/orderers/o2.orderer.example.com
 cp $PEER_DIR/tls/msp/signcerts/*.pem $PEER_DIR/tls/server.crt
 cp $PEER_DIR/tls/msp/keystore/* $PEER_DIR/tls/server.key
 
-cat $PEER_DIR/tls/msp/tlsintermediatecerts/*.pem \
-$PEER_DIR/tls/msp/tlscacerts/*.pem > $PEER_DIR/tls/ca.crt
+cat $PEER_DIR/tls/msp/intermediatecerts/*.pem \
+$PEER_DIR/tls/msp/cacerts/*.pem > $PEER_DIR/tls/ca.crt
 
-#rm -rf $PEER_DIR/tls/msp $PEER_DIR/tls/*.yaml
+rm -rf $PEER_DIR/tls/msp $PEER_DIR/tls/*.yaml
 
 
 export PEER_DIR=$ORG_DIR/orderers/o3.orderer.example.com
 cp $PEER_DIR/tls/msp/signcerts/*.pem $PEER_DIR/tls/server.crt
 cp $PEER_DIR/tls/msp/keystore/* $PEER_DIR/tls/server.key
 
-cat $PEER_DIR/tls/msp/tlsintermediatecerts/*.pem \
-$PEER_DIR/tls/msp/tlscacerts/*.pem > $PEER_DIR/tls/ca.crt
+cat $PEER_DIR/tls/msp/intermediatecerts/*.pem \
+$PEER_DIR/tls/msp/cacerts/*.pem > $PEER_DIR/tls/ca.crt
 
-#rm -rf $PEER_DIR/tls/msp $PEER_DIR/tls/*.yaml
-
-
-#cd ./crypto-config/ordererOrganizations/orderer.example.com/users/Admin@orderer.example.com/msp
-#mkdir admincerts
-#cp signcerts/cert.pem admincerts/Admin@orderer.example.com
-## back to home path
-#cd -
-#cd ./crypto-config/ordererOrganizations/orderer.example.com/orderers/o1.orderer.example.com/msp
-#cp -r ../../../users/Admin@orderer.example.com/msp/admincerts .
-#cd -
+rm -rf $PEER_DIR/tls/msp $PEER_DIR/tls/*.yaml
 
 
-rm -rf $ORG_DIR/msp
-
-# copy certs
-
-mkdir -p $ORG_DIR/msp/admincerts \
-$ORG_DIR/msp/cacerts \
-$ORG_DIR/msp/tlscacerts
-
-cp $ORG_DIR/users/Admin@orderer.example.com/msp/signcerts/*.pem $ORG_DIR/msp/admincerts/Admin@orderer.example.com-cert.pem
-cp $ORG_DIR/tlsca/ica.tls.orderer.example.com.cert $ORG_DIR/msp/tlscacerts/tlsca.orderer.example.com-cert.pem
-cp $ORG_DIR/ca/ica.identity.orderer.example.com.cert $ORG_DIR/msp/cacerts/ca.orderer.example.com-cert.pem
+cd ./crypto-config/ordererOrganizations/orderer.example.com/users/Admin@orderer.example.com/msp
+mkdir admincerts
+cp signcerts/cert.pem admincerts/Admin@orderer.example.com
+# back to home path
+cd -
+cd ./crypto-config/ordererOrganizations/orderer.example.com/orderers/o1.orderer.example.com/msp
+cp -r ../../../users/Admin@orderer.example.com/msp/admincerts .
+cd -

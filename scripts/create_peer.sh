@@ -79,3 +79,5 @@ cat $ORG_DIR/tlsca/ica.tls.org1.example.com.cert $PWD/tls-rca/certs/rca.tls.org1
 
 cat $ORG_DIR/tlsca/chain.tls.org1.example.com.cert
 
+openssl ec -in $ORG_DIR/ca/ica.identity.org1.example.com.key -text > $ORG_DIR/ca/ica.identity.org1.example.com.key.pem
+openssl ec -in $ORG_DIR/tlsca/ica.tls.org1.example.com.key -text > $ORG_DIR/tlsca/ica.tls.org1.example.com.key.pem

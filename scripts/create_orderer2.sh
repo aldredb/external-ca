@@ -25,7 +25,7 @@ export FABRIC_CA_CLIENT_HOME=$PWD/crypto-config/ordererOrganizations/orderer.exa
 fabric-ca-client enroll --caname ca --csr.names "${CSR_NAMES}" -m admin -u \
 http://admin:adminpw@localhost:7055
 
-sleep 20
+sleep 30
 
 fabric-ca-client register --caname ca --id.name Admin@orderer.example.com \
 --id.secret mysecret --id.type admin -u \
@@ -77,13 +77,13 @@ $PEER_DIR/msp/chain.cert
 cp $PWD/nodeou.yaml $PEER_DIR/msp/config.yaml
 
 sleep 5
+# TLS
 
 export FABRIC_CA_CLIENT_HOME=$TLS_REGISTRAR_DIR
 fabric-ca-client enroll --caname tlsca --csr.names "${CSR_NAMES}" -m admin \
 -u http://admin:adminpw@localhost:7055
 
-
-sleep 20
+sleep 30
 
 fabric-ca-client register --caname tlsca --id.name o1.orderer.example.com \
 --id.secret mysecret --id.type orderer \

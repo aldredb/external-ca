@@ -23,7 +23,7 @@ FABRIC_CA_SERVER_TLS_KEYFILE=$PWD/crypto-config/peerOrganizations/org1.example.c
 fabric-ca-client enroll --caname ca --csr.names "${CSR_NAMES}" -m admin -u \
 http://admin:adminpw@localhost:7054
 
-sleep 15
+sleep 30
 
 fabric-ca-client register --caname ca --id.name Admin@org1.example.com \
 --id.secret mysecret --id.type admin  -u \
@@ -58,7 +58,7 @@ fabric-ca-client enroll --caname tlsca --csr.names "${CSR_NAMES}" -m admin \
 --enrollment.profile tls \
 -u http://admin:adminpw@localhost:7054
 
-sleep 20
+sleep 30
 
 fabric-ca-client register --caname tlsca --id.name peer0.org1.example.com \
 --id.secret mysecret --id.type peer  \

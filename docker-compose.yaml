@@ -28,6 +28,8 @@ services:
       - ORDERER_GENERAL_TLS_ROOTCAS=[/var/hyperledger/orderer/tls/ca.crt]
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric
     command: orderer
+    #dns:
+    #  - 10.140.0.12
     ports:
       - 7050:7050
     volumes:
@@ -59,6 +61,8 @@ services:
       - ORDERER_GENERAL_TLS_ROOTCAS=[/var/hyperledger/orderer/tls/ca.crt]
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric
     command: orderer
+    #dns:
+    #  - 10.140.0.12
     ports:
       - 7049:7050
     volumes:
@@ -93,6 +97,8 @@ services:
       - ORDERER_GENERAL_TLS_ROOTCAS=[/var/hyperledger/orderer/tls/ca.crt]
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric
     command: orderer
+    #dns:
+    #  - 10.140.0.12
     ports:
       - 7048:7050
     volumes:
@@ -125,7 +131,7 @@ services:
     container_name: ica.org1.example.com
     networks:
       - basic
- 
+
   ica.orderer.example.com:
     image: hyperledger/fabric-ca:1.4.9
     environment:
@@ -138,7 +144,7 @@ services:
       - FABRIC_CA_SERVER_TLS_CLIENTAUTH_TYPE
     ports:
       - "7055:7054"
-    #command: sh -c 'fabric-ca-server start -b admin:adminpw -d --tls.certfile $FABRIC_CA_SERVER_TLS_CERTFILES --tls.keyfile $FABRIC_CA_SERVER_TLS_KEYFILE' 
+    #command: sh -c 'fabric-ca-server start -b admin:adminpw -d --tls.certfile $FABRIC_CA_SERVER_TLS_CERTFILES --tls.keyfile $FABRIC_CA_SERVER_TLS_KEYFILE'
     command: sh -c 'fabric-ca-server start -b admin:adminpw -d'
     volumes:
       - ./crypto-config/ordererOrganizations/orderer.example.com/ca/:/etc/hyperledger/fabric-ca-server-config/ca
@@ -159,7 +165,7 @@ services:
       - FABRIC_CA_SERVER_CA_CHAINFILE=/etc/hyperledger/fabric-ca-server-config/newchain.identity.org1.example.com.cert
     ports:
       - "8054:7054"
-    command: sh -c 'fabric-ca-server start -b admin:adminpw -d' 
+    command: sh -c 'fabric-ca-server start -b admin:adminpw -d'
     volumes:
       - ./newica/:/etc/hyperledger/fabric-ca-server-config
       - ./newca-config/:/etc/hyperledger/fabric-ca-server
@@ -203,6 +209,8 @@ services:
       - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/ca.crt
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric
     command: peer node start
+    #dns:
+    #  - 10.140.0.12
     ports:
       - 7051:7051
       - 7052:7052
@@ -216,7 +224,7 @@ services:
       - couchdb
     networks:
       - basic
-  
+
   couchdb:
     container_name: couchdb
     image: hyperledger/fabric-couchdb:0.4.21
@@ -229,7 +237,7 @@ services:
       - 5984:5984
     networks:
       - basic
- 
+
   org1-cli:
     container_name: org1-cli
     image: hyperledger/fabric-tools:2.2
@@ -249,6 +257,8 @@ services:
       - CORE_PEER_TLS_ROOTCERT_FILE=/var/crypto/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
     command: /bin/bash
+    #dns:
+    #  - 10.140.0.12
     volumes:
       - /var/run/:/host/var/run/
       - ./chaincode/:/opt/gopath/src/github.com/

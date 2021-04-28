@@ -78,3 +78,6 @@ $PEER_DIR/tls/msp/cacerts/*.pem > $PEER_DIR/tls/ca.crt
 # rm -rf $PEER_DIR/tls/msp $PEER_DIR/tls/*.yaml
 
 mkdir $ORG_DIR/msp/admincerts && cp $ORG_DIR/users/Admin@org1.example.com/msp/signcerts/cert.pem $ORG_DIR/msp/admincerts
+mkdir $ORG_DIR/msp/tlscacerts && cp $PEER_DIR/tls/ca.crt $ORG_DIR/msp/tlscacerts 
+cp -r $ORG_DIR/msp/admincerts $PEER_DIR/msp/admincerts
+cp -r $ORG_DIR/msp/tlscacerts $PEER_DIR/msp/tlscacerts

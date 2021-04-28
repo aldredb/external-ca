@@ -69,7 +69,7 @@ $ORG_DIR/tlsca/ica.tls.org1.example.com.key
 openssl req -new -sha256 -key $ORG_DIR/tlsca/ica.tls.org1.example.com.key -out \
 $ORG_DIR/tlsca/ica.tls.org1.example.com.csr \
 -subj "${SUBJ}ica.tls.org1.example.com" \
--config rnd_openssl.cnf
+-config openssl_root-tls.cnf
 
 openssl ca -batch -config openssl_root-tls.cnf -extensions v3_intermediate_ca \
 -days 1825 -notext -md sha256 -in $ORG_DIR/tlsca/ica.tls.org1.example.com.csr \

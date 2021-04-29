@@ -9,10 +9,10 @@ case "${unameOut}" in
     *)          machine="UNKNOWN:${unameOut}"
 esac
 
-CURRENTORGDOMAIN=orderer.mydomain.com
+CURRENTORGDOMAIN=orderer.example.com
 CURRENTORGMSPNAME=Orderer
 
-REPLACEORGDOMAIN=orderer.mydomain.com
+REPLACEORGDOMAIN=orderer.example.com
 REPLACEORGMSPNAME=Orderer
 
 echo "Current os: $machine"

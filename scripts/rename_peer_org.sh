@@ -12,8 +12,8 @@ esac
 CURRENTORGDOMAIN=org1.example.com
 CURRENTORGMSPNAME=Org1
 
-REPLACEORGDOMAIN=org1.newdomain.com
-REPLACEORGMSPNAME=NewOrg
+REPLACEORGDOMAIN=org1.example.com
+REPLACEORGMSPNAME=Org1
 
 echo "Current os: $machine"
 if [ $machine = "Linux" ]

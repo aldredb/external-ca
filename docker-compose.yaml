@@ -238,8 +238,8 @@ services:
     networks:
       - basic
 
-  org1-cli:
-    container_name: org1-cli
+  org-cli:
+    container_name: org-cli
     image: hyperledger/fabric-tools:2.2
     tty: true
     environment:

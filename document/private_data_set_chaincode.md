@@ -2,7 +2,7 @@
 
 ## copy chaincode
 ```
-CILCONATINERNAME=org1-cli
+CILCONATINERNAME=org-cli
 docker cp ~/fabric-samples/asset-transfer-private-data/chaincode-go $CILCONATINERNAME:/
 ```
 ## docker on cli docker

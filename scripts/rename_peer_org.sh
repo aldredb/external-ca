@@ -17,9 +17,9 @@ REPLACEORGMSPNAME=Org1
 
 echo "Current os: $machine"
 if [ $machine = "Linux" ]
+then
   find ./ ! -iname 'rename*.sh' -type f \( -iname \*.yaml -o -iname \*.sh -o -iname \*.cnf \) -exec sed -i "s/$CURRENTORGDOMAIN/$REPLACEORGDOMAIN/g" {} \;
   find ./ ! -iname 'rename*.sh' -type f \( -iname \*.yaml -o -iname \*.sh -o -iname \*.cnf \) -exec sed -i "s/$CURRENTORGDOMAIN/$REPLACEORGMSPNAME/g" {} \;
-then
 elif [ $machine = "Mac" ]
 then
   find ./ ! -iname 'rename*.sh' -type f \( -iname \*.yaml -o -iname \*.sh -o -iname \*.cnf \) -exec sed -i '' -e "s/$CURRENTORGDOMAIN/$REPLACEORGDOMAIN/g" {} \;
